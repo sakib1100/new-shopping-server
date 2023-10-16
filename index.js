@@ -34,7 +34,7 @@ async function run(){
   
   //get data from database
 
-app.get('/deleteData', async (req,res) => {
+app.get('/getData', async (req,res) => {
 const service = await serviceCollection.find({}).toArray();
 res.send(service);
 })

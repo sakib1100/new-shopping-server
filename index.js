@@ -16,7 +16,7 @@ app.use(express.json());
 
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pzm1kvk.mongodb.net/?retryWrites=true&w=majority`;
 
-
+// console.log(url)
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -48,6 +48,14 @@ app.post('/post-data', async(req,res) => {
 })
 
 // delete product
+
+// app.get('/getData/:id', async(req,res) => {
+//   const id = req.params.id;
+// const query = await serviceCollection.find({_id: new ObjectId(id)});
+// res.send(query);
+// })
+
+
 
 
 app.delete('/deleteData/:id', async(req,res) => {

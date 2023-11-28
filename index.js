@@ -30,9 +30,10 @@ async function run(){
   
   //get data from database
 
-app.get('/getData', async (req,res) => {
-const service = await serviceCollection.find({}).toArray();
-res.send(service);
+app.get('/getData', async(req,res) => {
+const service =  serviceCollection.find();
+const result = await service.toArray();
+res.send(result);
 })
 
 //post data

@@ -1,11 +1,9 @@
-const express = require('express');
+const express = require("express");
+const cors = require("cors");
 const app = express();
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
-const cors = require('cors');
-require('dotenv').config();
-
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
+require("dotenv").config();
 const port = process.env.PORT || 5000;
-
 
 app.use(cors());
 app.use(express.json());
@@ -18,68 +16,53 @@ const client = new MongoClient(uri, {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
 });
 
+async function run() {
+  try {
+    await client.connect();
+    const orderData = client.db("shopping").collection("insertData");
+    const mainData = client.db("shopping").collection("mainData");
 
-async function run(){
-    try{
-  await client.connect();
-  const serviceCollection = client.db('shopping').collection('insertData');
-  
-  
-  //get data from database
+    // get main data get
 
-app.get('/getData', async(req,res) => {
-const service =  serviceCollection.find();
-const result = await service.toArray();
-res.send(result);
-})
+    app.get("/getMainData", async (req, res) => {
+      const service = mainData.find();
+      const result = await service.toArray();
+      res.send(result);
+    });
 
-//post data
+    //get data from database for delete
 
-app.post('/post-data', async(req,res) => {
-  const body = req.body;
-  const result = await serviceCollection.insertOne(body);
-  res.send(result);
-})
+    app.get("/getData", async (req, res) => {
+      const service = orderData.find();
+      const result = await service.toArray();
+      res.send(result);
+    });
 
+    //post data
 
-app.delete('/deleteData/:id', async(req,res) => {
-  const id = req.params.id;
-  const query = {_id: new ObjectId(id)}
-  const result = await serviceCollection.deleteOne(query);
-  res.send(result)
-  })
-  
-  
-    }
+    app.post("/postData", async (req, res) => {
+      const body = req.body;
+      const result = await orderData.insertOne(body);
+      res.send(result);
+    });
 
-
-    finally{
-  
-    }
+    app.delete("/deleteData/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await orderData.deleteOne(query);
+      res.send(result);
+    });
+  } finally {
   }
-  
-  
-  run().catch(console.dir);
-  
-  
+}
 
-app.get('/', (req, res) => {
-  res.send('Hello World!')
-})
+run().catch(console.dir);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`)
+  console.log(`Example app listening on port ${port}`);
 });
 
-
-
-
-
-
-
 // https://new-shopping-server.vercel.app
-
-

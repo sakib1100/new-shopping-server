@@ -8,8 +8,9 @@ const port = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
+// ${process.env.DB_USER} ${process.env.DB_PASS}
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.pzm1kvk.mongodb.net/?retryWrites=true&w=majority`;
-console.log(uri);
+
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
@@ -25,23 +26,20 @@ async function run() {
     const mainData = client.db("shopping").collection("mainData");
 
     // get main data get
-
     app.get("/getMainData", async (req, res) => {
       const service = mainData.find();
       const result = await service.toArray();
       res.send(result);
     });
 
-    //get data from database for delete
-
+    // get data from database for delete
     app.get("/getData", async (req, res) => {
       const service = orderData.find();
       const result = await service.toArray();
       res.send(result);
     });
 
-    //post data
-
+    // post data
     app.post("/postData", async (req, res) => {
       const body = req.body;
       const result = await orderData.insertOne(body);
@@ -55,11 +53,16 @@ async function run() {
       res.send(result);
     });
   } finally {
+    // Optionally, you may want to close the client when done
+    // await client.close();
   }
 }
 
 run().catch(console.dir);
 
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });

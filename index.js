@@ -33,10 +33,17 @@ async function run() {
     });
 
     // get data from database for delete
+    // app.get("/getData", async (req, res) => {
+    //   const service = orderData.find();
+    //   const result = await service.toArray();
+    //   res.send(result);
+    // });
     app.get("/getData", async (req, res) => {
-      const service = orderData.find();
-      const result = await service.toArray();
-      res.send(result);
+      const email = req.query.email;
+      const query = { email: email };
+      console.log("database eamil is", query);
+      const booking = await orderData.find(query).toArray();
+      res.send(booking);
     });
 
     // post data
